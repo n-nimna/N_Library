@@ -27,7 +27,7 @@
             <i class="fas fa-tags"></i>
             <span>Book Categories</span>
         </a>
-        <a href="#">
+        <a href="${pageContext.request.contextPath}/admin/manage-admin/">
             <i class="fas fa-user-shield"></i>
             <span>Admins</span>
         </a>

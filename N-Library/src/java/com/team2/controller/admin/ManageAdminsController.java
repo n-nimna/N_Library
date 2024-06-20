@@ -1,6 +1,5 @@
 package com.team2.controller.admin;
 
-
 import com.team2.models.User;
 import com.team2.service.UserService;
 import java.io.FileOutputStream;
@@ -22,21 +21,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-@WebServlet(name = "StudentController", urlPatterns = {
-    "/admin/students/new",
-    "/admin/students/register",
-    "/admin/students/delete",
-    "/admin/students/edit",
-    "/admin/students/update",
-    "/admin/students/",
-    "/admin/students/find"
+@WebServlet(name = "manageadmins", urlPatterns = {
+    "/admin/manage-admin/new",
+    "/admin/manage-admin/register",
+    "/admin/manage-admin/delete",
+    "/admin/manage-admin/edit",
+    "/admin/manage-admin/update",
+    "/admin/manage-admin/",
+    "/admin/manage-admin/find"
 })
 @MultipartConfig
-public class AdminStudentController extends HttpServlet {
+public class ManageAdminsController extends HttpServlet {
 
     private UserService userService;
 
-    public AdminStudentController() {
+    public ManageAdminsController() {
         this.userService = new UserService();
     }
 
@@ -53,25 +52,25 @@ public class AdminStudentController extends HttpServlet {
 
         try {
             switch (action) {
-                case "/admin/students/new":
+                case "/admin/manage-admin/new":
                     showNewForm(request, response);
                     break;
-                case "/admin/students/register":
+                case "/admin/manage-admin/register":
                     insertStudent(request, response);
                     break;
-                case "/admin/students/delete":
+                case "/admin/manage-admin/delete":
                     deleteStudent(request, response);
                     break;
-                case "/admin/students/edit":
+                case "/admin/manage-admin/edit":
                     showEditForm(request, response);
                     break;
-                case "/admin/students/update":
+                case "/admin/manage-admin/update":
                     updateStudent(request, response);
                     break;
-                case "/admin/students/":
-                    showStudents(request, response);
+                case "/admin/manage-admin/":
+                    showAdmins(request, response);
                     break;
-                case "/admin/students/find":
+                case "/admin/manage-admin/find":
                     findStudentById(request, response);
                     break;
                 default:
@@ -90,7 +89,7 @@ public class AdminStudentController extends HttpServlet {
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/students/student_form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/Admin_manage/admin_form.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -127,7 +126,7 @@ public class AdminStudentController extends HttpServlet {
             request.setAttribute("status", "InsertFailed");
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/Admin/students/addStudent.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/Admin/Admin_manage/addStudent.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -144,7 +143,7 @@ public class AdminStudentController extends HttpServlet {
             request.setAttribute("status", "DeleteFailed");
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/students/show");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/Admin_manage/show");
         dispatcher.forward(request, response);
     }
 
@@ -154,7 +153,7 @@ public class AdminStudentController extends HttpServlet {
         int userId = Integer.parseInt(id);
         User student = userService.showUserById(userId);
         request.setAttribute("student", student);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/students/student_form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/Admin_manage/student_form.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -202,15 +201,15 @@ public class AdminStudentController extends HttpServlet {
             request.setAttribute("status", "UpdateFailed");
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/students/edit?id=" + userId);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/Admin_manage/edit?id=" + userId);
         dispatcher.forward(request, response);
     }
 
-    private void showStudents(HttpServletRequest request, HttpServletResponse response)
+    private void showAdmins(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        List<User> students = userService.showUsers("student");
-        request.setAttribute("students", students);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/students/show_students.jsp");
+        List<User> admin = userService.showUsers("admin");
+        request.setAttribute("admins", admin);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/Admin_manage/show_admins.jsp");
         dispatcher.forward(request, response);
     }
     private void findStudentById(HttpServletRequest request, HttpServletResponse response)

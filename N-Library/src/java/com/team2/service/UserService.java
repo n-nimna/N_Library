@@ -68,11 +68,11 @@ public class UserService {
     }
 
     // Get all users (with a filter for student type)
-    public List<User> showUsers() {
+    public List<User> showUsers(String userType) {
         List<User> usersList = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)) {
-            statement.setString(1, "student"); // Filter by "student" user type
+            statement.setString(1, userType);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 User user = mapResultSetToUser(resultSet);
