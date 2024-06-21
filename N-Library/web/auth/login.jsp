@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqk1wZxL+h7yzfrPLIXD" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <link rel="stylesheet" href="../style/login.css">
+    <link rel="stylesheet" href="/N-Library/styles/login.css">
     
 
 </head>
@@ -26,7 +26,7 @@
         <div class="container">
         <div class="login-form">
             <h2><u><b>User Login</b></u></h2>
-            <form id="loginForm">
+            <form  action="/N-Library/AuthController" method="POST" id="loginForm">
                 <div class="input-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
