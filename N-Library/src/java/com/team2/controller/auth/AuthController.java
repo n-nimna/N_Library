@@ -7,11 +7,18 @@ package com.team2.controller.auth;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -61,18 +68,64 @@ public class AuthController extends HttpServlet {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        HttpSession session = request.getSession(true);
+        
+        
+        try{
+           Class.forName("com.mysql.jdbc.Driver");
+           Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/librarySystem","root","");
+            
+           //get data from login table using query
+           Statement stm = con.createStatement();
+           String query = "select 'from users Where email='"+email+"'  AND password='"+password+"'";
+           ResultSet rs = stm.executeQuery(query);
+           
+           
+           
+           if(rs.next()){
+           String userType = rs.getString("user_type");
+           int userId      = rs.getInt("id");
+           
+            if (userType.equals("admin")) 
+                {
+                    session.setAttribute("admin_id",userId);
+                    response.sendRedirect("adminDashboard.jsp");
+                } 
+           else if (userType.equals("users"))
+                   
+                {
+                     session.setAttribute("user_id",userId);
+                     response.sendRedirect("");
+                }
+                else{
+                      request.setAttribute("message","User Not Founded");
+                      RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                      dispatcher.forward(request, response);
+                   }
+            }else{
+                      request.setAttribute("message","Incorrect email or password");
+                      RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                      dispatcher.forward(request, response);
+               }
+           }
+        
+       catch(ClassNotFoundException | SQLException error  ){
+            
+        String m = error.getMessage();
+        request.setAttribute("massage", m);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        dispatcher.forward(request, response);
+            
+        }
     }
 
     /**
