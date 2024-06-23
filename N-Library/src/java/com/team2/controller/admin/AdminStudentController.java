@@ -281,11 +281,11 @@ public class AdminStudentController extends HttpServlet {
         boolean success;
 
         if (userService.isActive(id)) {
-            success = userService.disableStudent(id);
+            success = userService.disableUser(id);
             out.print(userService.isActive(id));
 
         } else {
-            success = userService.enableStudent(id);
+            success = userService.enableUser(id);
             out.print("error");
         }
 
@@ -301,13 +301,5 @@ public class AdminStudentController extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void findStudentById(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
-        String id = request.getParameter("id");
-        int userId = Integer.parseInt(id);
-        User student = userService.showUserById(userId);
-        request.setAttribute("student", student);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/Admin/students/displayStudents.jsp");
-        dispatcher.forward(request, response);
-    }
+   
 }

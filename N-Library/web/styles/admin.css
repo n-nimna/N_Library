@@ -42,6 +42,14 @@ a:hover{
     margin-top: 5px;
 }
 
+/*this for table <td> responsive*/
+.truncate {
+    max-width: 10rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /*common css*/
 
 /*side bar css*/

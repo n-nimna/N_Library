@@ -78,7 +78,7 @@ public class UserService {
         return false;
     }
 
-    public boolean enableStudent(int userId) {
+    public boolean enableUser(int userId) {
         String enableQuery = "UPDATE user SET active = TRUE WHERE userId = ?";
         try (Connection connection = DBConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(enableQuery)) {
@@ -90,7 +90,7 @@ public class UserService {
         return false;
     }
 
-    public boolean disableStudent(int userId) {
+    public boolean disableUser(int userId) {
         String disableQuery = "UPDATE user SET active = FALSE WHERE userId = ?";
         try (Connection connection = DBConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(disableQuery)) {

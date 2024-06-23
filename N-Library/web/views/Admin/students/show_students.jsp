@@ -60,42 +60,22 @@
                         <% for (User student : students) {%>
                         <tr style="border-bottom: 1px solid #222222;"> 
                             <td><%= count++%></td>
-                            <td><%= student.getFirstName()%></td>
-                            <td><%= student.getLastName()%></td>
+                            <td class="truncate"><%= student.getFirstName()%></td>
+                            <td class="truncate"><%= student.getLastName()%></td>
                             <td>
                                 <img src="<%= assetsUrl.giveUrl(request, "DBImages/") + student.getImage()%>" style="width:5rem;height:5rem">
                             </td>
                             <td><%= student.getUserNic()%></td>
-                            <td><%= student.getEmail()%></td>
+                            <td class="truncate"><%= student.getEmail()%></td>
                             <td><%= student.getPhoneNumber()%></td>
-                            <td><%= student.getAddress()%></td> 
+                            <td class="truncate"><%= student.getAddress()%></td> 
                             <td>
                                 <a href="#" onclick="return changeStatus('<%= student.getUserId()%>');"
                                    class="<%= student.isActive()== true ? "btn btn-success" : "btn btn-danger"%>" style="width: 3rem; font-size: .5rem; font-weight: bold;">
                                     <%= student.isActive()== true ? "Active" : "Disable"%>
                                 </a>
                             </td>
-                    <script>
-                        function changeStatus(studentId) {
-                            // Display a confirmation dialog using SweetAlert
-                            swal({
-                                title: "Are you sure?",
-                                text: "Are you sure you want to change the status of the student?",
-                                icon: "warning",
-                                buttons: true,
-                                dangerMode: true,
-                            }).then(function (willDelete) {
-                                if (willDelete) {
-                                    // Redirect to the changeStatus action with the student ID
-                                    window.location.href = "<%= request.getContextPath()%>/admin/students/changeStatus?studentId=" + studentId;
-                                } else {
-                                    // Do nothing if the user cancels
-                                }
-                            });
-                            // Return false to prevent the default link action
-                            return false;
-                        }
-                    </script>
+                   
 
 
                     <td>
