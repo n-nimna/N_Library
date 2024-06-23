@@ -1,61 +1,52 @@
-/*
-    @Author : Ashani
-*/
 package com.team2.controller.utill;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DBConnection {
 
-    /* oyalage Mysql Database ekata connect weddi  'jdbc:mysql://localhost:3306/users'   me URL eke  '//localhost:3306/users' eke indan 
-    wenas karanna thiye nm witharak wenas karanna, 'users' kiyanne Mysql Database eke name eka*/
-    private static final String url = "jdbc:mysql://localhost:3306/dietme";
+    // Database connection details
+    private static final String url = "jdbc:mysql://localhost:3306/librarySystem";
     private static final String username = "root";
     private static final String password = "";
 
-//                private static final String url = "jdbc:mysql://auth-db1303.hstgr.io:3306/u845558628_DietMe";
-//                private static final String username = "u845558628_teamhydra";
-//                private static final String password = "oB3WW!8~";
-    public static PreparedStatement setStatment(String sql) throws SQLException {
+    // Load the MySQL JDBC driver (static block for initialization)
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Error: JDBC Driver not found! " + e.getMessage());
+        }
+    }
 
+    // Get a database connection
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, username, password);
+    }
+
+    // Prepare a statement
+    public static PreparedStatement setStatment(String sql) throws SQLException {
         Connection connection = null;
         PreparedStatement stmt = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(url, username, password);
-
-            if (connection.isValid(0)) {
-
-                stmt = connection.prepareStatement(sql);
-                System.out.println("Connected To The Database");
-            }
-            if (!(connection.isValid(0))) {
-                System.out.println("Could Not Connect To The Database");
-            }
-
-        } catch (ClassNotFoundException e) {
-
-            throw new SQLException("JDBC Driver not found", e);
-
+            connection = getConnection(); // Get the connection here
+            stmt = connection.prepareStatement(sql);
         } catch (SQLException e) {
-
             throw new SQLException("Connection failed: " + e.getMessage(), e);
-
+        } finally {
+            closeResources(connection, stmt);
         }
         return stmt;
     }
 
-public static Connection getConnection() throws SQLException {
-    Connection connection = DriverManager.getConnection(url, username, password);
-    return connection;
-}
-    
+    // Close database resources safely
     public static void closeResources(Connection con, PreparedStatement pst) {
-        // Close the database resources
         try {
             if (pst != null) {
                 pst.close();
@@ -67,6 +58,4 @@ public static Connection getConnection() throws SQLException {
             System.out.println("Error in closing resources: " + ex.getMessage());
         }
     }
-    
-    
 }
