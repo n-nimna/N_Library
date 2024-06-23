@@ -5,8 +5,13 @@
  */
 package com.team2.controller.admin;
 
+import com.team2.models.BookCategories;
+import com.team2.models.User;
+import com.team2.service.BookCategoryService;
+import com.team2.service.UserService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,6 +25,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "AdminHome", urlPatterns = {"/admin/home"})
 public class AdminHomeController extends HttpServlet {
+    
+    private  UserService userService;
+    private  BookCategoryService bookCategoryService;
+    
+    public AdminHomeController(){
+      this.userService = new UserService();
+      this.bookCategoryService = new BookCategoryService();
+      
+    }
 
     
 
@@ -27,6 +41,19 @@ public class AdminHomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         List<User> admins = userService.showUsers("admin");
+         List<User> students = userService.showUsers("student");
+         List<BookCategories> categories = bookCategoryService.showBookCategories();
+         
+         
+         int number_of_students = students.size(); 
+         int number_of_admins = admins.size();
+         int number_of_categories = categories.size();
+         
+         request.setAttribute("number_of_students", number_of_students);
+         request.setAttribute("number_of_admins", number_of_admins);
+         request.setAttribute("number_of_categories", number_of_categories);
+
          RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/home/home.jsp");
         dispatcher.forward(request, response);
     }
