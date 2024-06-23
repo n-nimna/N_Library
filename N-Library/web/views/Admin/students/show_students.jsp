@@ -19,9 +19,7 @@
     <body>
         <%@ include file="/views/Admin/admincommon/sidebar.jspf" %>
         <div class="content">
-            <div class="adminName">
-                <h2>Kavindu Kaveesha</h2>
-            </div>
+              <%@ include file="/views/Admin/admincommon/header.jsp" %>
             <div id="message" class="container-fluid"></div>
 
             <div class="container-fluid">
@@ -41,7 +39,7 @@
 
                 <% if (students != null && !students.isEmpty()) { %> 
                 <table class="table table-hover table-striped">
-                    <thead class="thead-light">
+                    <thead class="">
                         <tr>
                             <th>ID</th>
                             <th>First Name</th>

@@ -14,21 +14,26 @@
     </head>
 
     <body>
+        <%
+            // Check if the user is logged in
+            if (session == null || session.getAttribute("loggedInUser") == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+        %>
         <%@ include file="/views/Admin/admincommon/sidebar.jspf" %>
 
         <div class="content">
-            <div class="adminName">
-                <h2>Kavindu Kaveesha</h2>
-            </div>
+            <%@ include file="/views/Admin/admincommon/header.jsp" %>
             <!--get numbers of lists data-->
             <%
-                Object numberOfStudentsObj = request.getAttribute("number_of_students");  
+                Object numberOfStudentsObj = request.getAttribute("number_of_students");
                 Object numberOfAdminsObj = request.getAttribute("number_of_admins");
                 Object numberOfCategoriesObj = request.getAttribute("number_of_categories");
 
-                int numberOfStudents = 0;  
+                int numberOfStudents = 0;
                 int numberOfAdmins = 0;
-                int numberOfCategories= 0;
+                int numberOfCategories = 0;
 
                 if (numberOfStudentsObj != null) {
                     numberOfStudents = Integer.parseInt(numberOfStudentsObj.toString());
@@ -81,7 +86,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title">Books Categories</h5>
-                           <h2 class="card-text"><%= numberOfCategories %></h2>
+                            <h2 class="card-text"><%= numberOfCategories%></h2>
 
                         </div>
                     </div>
@@ -90,7 +95,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title">Admins</h5>
-                            <h2 class="card-text"><%= numberOfAdmins %></h2>
+                            <h2 class="card-text"><%= numberOfAdmins%></h2>
 
                         </div>
                     </div>

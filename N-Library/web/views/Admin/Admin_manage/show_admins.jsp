@@ -18,9 +18,7 @@
     <body>
         <%@ include file="/views/Admin/admincommon/sidebar.jspf" %>
         <div class="content">
-            <div class="adminName">
-                <h2>Kavindu Kaveesha</h2>
-            </div>
+              <%@ include file="/views/Admin/admincommon/header.jsp" %>
             <div id="message" class="container-fluid"></div>
 
             <div class="container-fluid">

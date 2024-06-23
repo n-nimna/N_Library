@@ -238,7 +238,7 @@ public class ManageAdminsController extends HttpServlet {
             imageFileName = dbImage;
         }
 
-        User student = new User(firstName, lastName, userNic, dbImage, email, phoneNumber, address, userId);
+        User student = new User(firstName, lastName, userNic, imageFileName, email, phoneNumber, address, userId);
         boolean updated = userService.updateUser(student);
 
         if (updated) {

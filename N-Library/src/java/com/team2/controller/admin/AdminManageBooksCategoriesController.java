@@ -14,9 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "AdminBookCategoryController", urlPatterns = {
     "/admin/bookcategories/new",
-    "/admin/bookcategories/register",
+    "/admin/bookcategories/add-new",
     "/admin/bookcategories/delete",
-    "/admin/bookcategories/edit",
     "/admin/bookcategories/update",
     "/admin/bookcategories/",
     "/admin/bookcategories/find"
@@ -42,27 +41,21 @@ public class AdminManageBooksCategoriesController extends HttpServlet {
 
         try {
             switch (action) {
-                case "/admin/bookcategories/new":
-                    showNewForm(request, response);
-                    break;
-                case "/admin/bookcategories/register":
+
+                case "/admin/bookcategories/add-new":
                     insertBookCategory(request, response);
                     break;
                 case "/admin/bookcategories/delete":
                     deleteBookCategory(request, response);
                     break;
-                case "/admin/bookcategories/edit":
-                    showEditForm(request, response);
-                    break;
+
                 case "/admin/bookcategories/update":
                     updateBookCategory(request, response);
                     break;
                 case "/admin/bookcategories/":
                     showBookCategories(request, response);
                     break;
-                case "/admin/bookcategories/find":
-                    findBookCategoryById(request, response);
-                    break;
+
                 default:
                     break;
             }
@@ -77,9 +70,11 @@ public class AdminManageBooksCategoriesController extends HttpServlet {
         doGet(request, response);
     }
 
-    private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/bookcategories/bookcategory_form.jsp");
+    private void showBookCategories(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        List<BookCategories> bookCategories = bookCategoryService.showBookCategories();
+        request.setAttribute("bookCategories", bookCategories);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/Books_Categories/show_bookcategories.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -87,7 +82,7 @@ public class AdminManageBooksCategoriesController extends HttpServlet {
             throws SQLException, IOException, ServletException {
         String categoryName = request.getParameter("categoryName");
 
-        BookCategories bookCategory = new BookCategories(0, categoryName);
+        BookCategories bookCategory = new BookCategories(categoryName);
         int insertedId = bookCategoryService.addBookCategory(bookCategory);
 
         if (insertedId > 0) {
@@ -95,14 +90,15 @@ public class AdminManageBooksCategoriesController extends HttpServlet {
         } else {
             request.setAttribute("status", "InsertFailed");
         }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/bookcategories/addBookCategory.jsp");
+        List<BookCategories> bookCategories = bookCategoryService.showBookCategories();
+        request.setAttribute("bookCategories", bookCategories);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/bookcategories/");
         dispatcher.forward(request, response);
     }
 
     private void deleteBookCategory(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        String id = request.getParameter("id");
+        String id = request.getParameter("bcId");
         int bcId = Integer.parseInt(id);
 
         boolean deleted = bookCategoryService.deleteBookCategory(bcId);
@@ -113,23 +109,13 @@ public class AdminManageBooksCategoriesController extends HttpServlet {
             request.setAttribute("status", "DeleteFailed");
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/bookcategories/show");
-        dispatcher.forward(request, response);
-    }
-
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
-        String id = request.getParameter("id");
-        int bcId = Integer.parseInt(id);
-        BookCategories bookCategory = bookCategoryService.showBookCategoryById(bcId);
-        request.setAttribute("bookCategory", bookCategory);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/bookcategories/bookcategory_form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/bookcategories/");
         dispatcher.forward(request, response);
     }
 
     private void updateBookCategory(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        String id = request.getParameter("id");
+        String id = request.getParameter("bcId");
         int bcId = Integer.parseInt(id);
 
         String categoryName = request.getParameter("categoryName");
@@ -143,25 +129,8 @@ public class AdminManageBooksCategoriesController extends HttpServlet {
             request.setAttribute("status", "UpdateFailed");
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/bookcategories/edit?id=" + bcId);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/bookcategories/");
         dispatcher.forward(request, response);
     }
 
-    private void showBookCategories(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
-        List<BookCategories> bookCategories = bookCategoryService.showBookCategories();
-        request.setAttribute("bookCategories", bookCategories);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/Books_Categories/show_bookcategories.jsp");
-        dispatcher.forward(request, response);
-    }
-
-    private void findBookCategoryById(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
-        String id = request.getParameter("id");
-        int bcId = Integer.parseInt(id);
-        BookCategories bookCategory = bookCategoryService.showBookCategoryById(bcId);
-        request.setAttribute("bookCategory", bookCategory);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/Admin/bookcategories/displayBookCategories.jsp");
-        dispatcher.forward(request, response);
-    }
 }

@@ -23,9 +23,7 @@
         <%@ include file="/views/Admin/admincommon/sidebar.jspf" %>
 
         <div class="content">
-            <div class="adminName">
-                <h2>Kavindu Kaveesha</h2>
-            </div>
+             <%@ include file="/views/Admin/admincommon/header.jsp" %>
 
             <div class="container form-container mt-5 p-3">
                 <div class="row">

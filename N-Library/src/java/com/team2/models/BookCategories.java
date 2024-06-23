@@ -13,6 +13,10 @@ public class BookCategories {
         this.categoryName = categoryName;
     }
 
+    public BookCategories(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     // Getters and Setters
     public int getBcId() {
         return bcId;
