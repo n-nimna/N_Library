@@ -1,0 +1,30 @@
+SMAP
+adminBook_jsp.java
+JSP
+*S JSP
+*F
++ 0 adminBook.jsp
+views/Admin/books/adminBook.jsp
++ 1 sidebar.jspf
+views/Admin/admincommon/sidebar.jspf
+*L
+1,11:60
+12:71,3
+13,12:74
+1#1,5:86
+6:91,3
+7,11:94
+18:105,3
+19,11:108
+30:119,3
+31,8:122
+24#0,25:130
+48:189,11
+49:200
+50,7:201,3
+57:222
+58:223,3
+59:226,5
+60,3:231
+62,15:157
+*E

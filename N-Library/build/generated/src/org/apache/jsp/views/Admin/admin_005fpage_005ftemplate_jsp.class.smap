@@ -1,0 +1,22 @@
+SMAP
+admin_005fpage_005ftemplate_jsp.java
+JSP
+*S JSP
+*F
++ 0 admin_page_template.jsp
+views/Admin/admin_page_template.jsp
++ 1 sidebar.jspf
+views/Admin/admincommon/sidebar.jspf
+*L
+1,10:50
+11:60,3
+12,30:63
+1#1,5:93
+6:98,3
+7,11:101
+18:112,3
+19,11:115
+30:126,3
+31,8:129
+41#0,49:137
+*E
