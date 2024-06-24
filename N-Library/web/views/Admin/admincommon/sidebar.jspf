@@ -1,5 +1,5 @@
 <div class="sidebar">
-        <a href="#">
+        <a>
             <i class="fas fa-book-open" style="margin: 0;"></i>
             <span>N Library</span>
         </a>
