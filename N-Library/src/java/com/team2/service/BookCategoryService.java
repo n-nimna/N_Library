@@ -8,8 +8,8 @@ import java.util.List;
 
 public class BookCategoryService {
 
-    private static final String INSERT_QUERY = "INSERT INTO book_category (genId, categoryName) VALUES (?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE book_category SET genId = ?, categoryName = ? WHERE bcId = ?";
+    private static final String INSERT_QUERY = "INSERT INTO book_category (categoryName) VALUES (?)";
+    private static final String UPDATE_QUERY = "UPDATE book_category SET categoryName = ? WHERE bcId = ?";
     private static final String DELETE_QUERY = "DELETE FROM book_category WHERE bcId = ?";
     private static final String SELECT_BY_ID_QUERY = "SELECT * FROM book_category WHERE bcId = ?";
     private static final String SELECT_ALL_QUERY = "SELECT * FROM book_category";
@@ -17,9 +17,8 @@ public class BookCategoryService {
     // Add a new BookCategory
     public int addBookCategory(BookCategories bookCategory) {
         try (Connection connection = DBConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setInt(1, bookCategory.getGenId());
-            statement.setString(2, bookCategory.getCategoryName());
+             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, bookCategory.getCategoryName());
 
             statement.executeUpdate();
 
@@ -36,10 +35,9 @@ public class BookCategoryService {
     // Update an existing BookCategory
     public boolean updateBookCategory(BookCategories bookCategory) {
         try (Connection connection = DBConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
-            statement.setInt(1, bookCategory.getGenId());
-            statement.setString(2, bookCategory.getCategoryName());
-            statement.setInt(3, bookCategory.getBcId());
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
+            statement.setString(1, bookCategory.getCategoryName());
+            statement.setInt(2, bookCategory.getBcId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -52,7 +50,7 @@ public class BookCategoryService {
     public List<BookCategories> showBookCategories() {
         List<BookCategories> bookCategoriesList = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 BookCategories bookCategory = mapResultSetToBookCategory(resultSet);
@@ -67,7 +65,7 @@ public class BookCategoryService {
     // Get a BookCategory by ID
     public BookCategories showBookCategoryById(int bcId) {
         try (Connection connection = DBConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
             statement.setInt(1, bcId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -82,7 +80,7 @@ public class BookCategoryService {
     // Delete a BookCategory
     public boolean deleteBookCategory(int bcId) {
         try (Connection connection = DBConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setInt(1, bcId);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -94,8 +92,7 @@ public class BookCategoryService {
     // Helper method to map ResultSet to BookCategory object
     private BookCategories mapResultSetToBookCategory(ResultSet resultSet) throws SQLException {
         int bcId = resultSet.getInt("bcId");
-        int genId = resultSet.getInt("genId");
         String categoryName = resultSet.getString("categoryName");
-        return new BookCategories(bcId, genId, categoryName);
+        return new BookCategories(bcId, categoryName);
     }
 }

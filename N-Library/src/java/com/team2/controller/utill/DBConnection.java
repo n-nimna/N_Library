@@ -11,7 +11,7 @@ import java.sql.Statement;
 public class DBConnection {
 
     // Database connection details
-    private static final String url = "jdbc:mysql://localhost:3306/librarysystem";
+    private static final String url = "jdbc:mysql://localhost:3306/librarySystem";
     private static final String username = "root";
     private static final String password = "";
 

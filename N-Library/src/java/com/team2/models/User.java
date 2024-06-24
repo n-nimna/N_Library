@@ -6,13 +6,13 @@ public class User {
     private String firstName;
     private String lastName;
     private String userNic;
-    private String image; // Store image path or base64 string
+    private String image;
     private String email;
     private String phoneNumber;
     private String address;
     private String password;
-    private boolean active; // True for active users, False for inactive
-    private String userType; // "admin" or "student"
+    private boolean active;
+    private String userType;
 
     // Constructors
     public User() {
@@ -30,6 +30,18 @@ public class User {
         this.password = password;
         this.active = active;
         this.userType = userType;
+    }
+
+    public User(String firstName, String lastName, String userNic, String image, String email, String phoneNumber, String address, int userId) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userNic = userNic;
+        this.image = image;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+
     }
 
     public int getUserId() {

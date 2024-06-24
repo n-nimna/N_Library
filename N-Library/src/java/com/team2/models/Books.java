@@ -10,7 +10,8 @@ package com.team2.models;
  * @author kavin
  */
 public class Books {
-    private int id; 
+
+    private int id;
     private String title;
     private String bookId;
     private String author;
@@ -18,38 +19,9 @@ public class Books {
     private int quantity;
     private String description;
     private String image;
-    private Boolean available; 
-    
-    // No-argument constructor
-    public Books() {
-    }
+    private Boolean available;
 
-    // Full-argument constructor
-    public Books( String title, String bookId, String author, int categoryId, int quantity, String description, String image , Boolean available) {
- 
-        this.title = title;
-        this.bookId = bookId;
-        this.author = author;
-        this.categoryId = categoryId;
-        this.quantity = quantity;
-        this.description = description;
-        this.image = image;
-    }
-
-    
-    public Books( String title, String bookId, String author, int categoryId, int quantity, String description, Boolean available) {
- 
-        this.title = title;
-        this.bookId = bookId;
-        this.author = author;
-        this.categoryId = categoryId;
-        this.quantity = quantity;
-        this.description = description;
-        this.image = image;
-    }
-    
-    
-     public Books(int id, String title, String bookId, String author, int categoryId, int quantity, String description, String image , Boolean available) {
+    public Books(int id, String title, String bookId, String author, int categoryId, int quantity, String description, String image, Boolean available) {
         this.id = id;
         this.title = title;
         this.bookId = bookId;
@@ -58,9 +30,39 @@ public class Books {
         this.quantity = quantity;
         this.description = description;
         this.image = image;
+        this.available = available;
     }
-   
 
+    public Books(String title, String bookId, String author, int categoryId, int quantity, String description, String image, Boolean available) {
+        this.title = title;
+        this.bookId = bookId;
+        this.author = author;
+        this.categoryId = categoryId;
+        this.quantity = quantity;
+        this.description = description;
+        this.image = image;
+        this.available = available;
+
+    }
+
+    public Books(int id, String title, String author, int categoryId, int quantity, String description, String image, Boolean available) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.categoryId = categoryId;
+        this.quantity = quantity;
+        this.description = description;
+        this.image = image;
+        this.available = available;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -117,13 +119,13 @@ public class Books {
     public void setImage(String image) {
         this.image = image;
     }
-    
-     public Boolean getAvailable() {
+
+    public Boolean getAvailable() {
         return available;
     }
 
     public void setAvailable(Boolean available) {
         this.available = available;
     }
-    
+
 }

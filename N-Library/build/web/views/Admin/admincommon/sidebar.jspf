@@ -1,5 +1,5 @@
 <div class="sidebar">
-        <a href="#">
+        <a>
             <i class="fas fa-book-open" style="margin: 0;"></i>
             <span>N Library</span>
         </a>
@@ -7,23 +7,20 @@
             <i class="fas fa-home"></i>
             <span>Home</span>
         </a>
-        <a href="${pageContext.request.contextPath}/admin/barrowbooks/shows">
+        <a href="${pageContext.request.contextPath}/admin/barrowbooks/">
             <i class="fas fa-arrow-down"></i>
             <span>Borrow Books</span>
         </a>
-        <a href="#">
-            <i class="fas fa-arrow-up"></i>
-            <span>Return Books</span>
-        </a>
+        
         <a href="${pageContext.request.contextPath}/admin/students/">
             <i class="fas fa-users"></i>
             <span>Students</span>
         </a>
-        <a href="#">
+        <a href="${pageContext.request.contextPath}/admin/books/">
             <i class="fas fa-book"></i>
             <span>Books</span>
         </a>
-        <a href="#">
+        <a href="${pageContext.request.contextPath}/admin/bookcategories/">
             <i class="fas fa-tags"></i>
             <span>Book Categories</span>
         </a>
@@ -31,7 +28,7 @@
             <i class="fas fa-user-shield"></i>
             <span>Admins</span>
         </a>
-        <a href="#">
+        <a href="${pageContext.request.contextPath}/logout">
             <i class="fas fa-sign-out-alt"></i>
             <span>Log Out</span>
         </a>

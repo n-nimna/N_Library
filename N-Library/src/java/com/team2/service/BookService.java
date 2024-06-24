@@ -1,202 +1,133 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.team2.service;
 
 import com.team2.controller.utill.DBConnection;
 import com.team2.models.Books;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookService {
-    
-   private static final String INSERT_BOOK_SQL = "INSERT INTO books (bookTitle, bookId, author, bookCategoryId, quantity, description, image,available) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
-   private static final String DELETE_BOOK_SQL = "DELETE FROM books WHERE id = ?"; 
-   private static final String UPDATE_BOOK_SQL = "UPDATE books SET bookTitle = ?, bookId = ?, author = ?, bookCategoryId = ?, quantity = ?, description = ?, image = ?, available=? WHERE id = ?";
-   private static final String SELECT_BOOK_BY_ID_SQL = "SELECT * FROM book WHERE id = ?";
-   private static final String SELECT_ALL_BOOKS_SQL = "SELECT * FROM books";
-   private static final String SELECT_BOOK_BY_ID_OR_NAME_SQL = "SELECT * FROM books WHERE Bookid = ? OR title = ?";
-    
-    public int InsertBook(Books book){
-        
-        int result = 0;
 
+    private static final String INSERT_QUERY = "INSERT INTO books (title, bookId, author, categoryId, quantity, description, image, available) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE books SET title = ?, bookId = ?, author = ?, categoryId = ?, quantity = ?, description = ?, image = ?, available = ? WHERE id = ?";
+    private static final String DELETE_QUERY = "DELETE FROM books WHERE id = ?";
+    private static final String SELECT_BY_ID_QUERY = "SELECT * FROM books WHERE id = ?";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM books";
+    private static final String SELECT_BY_BOOK_ID_QUERY = "SELECT * FROM books WHERE bookId = ?";
+
+    // Add a new book
+    public int addBook(Books book) {
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BOOK_SQL)) 
-        {
+                PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, book.getTitle());
+            statement.setString(2, book.getAuthor());
+            statement.setInt(3, book.getCategoryId());
+            statement.setInt(4, book.getQuantity());
+            statement.setString(5, book.getDescription());
+            statement.setString(6, book.getImage());
+            statement.setInt(7, book.getId());
 
-            preparedStatement.setString(1, book.getTitle());
-            preparedStatement.setString(2, book.getBookId());
-            preparedStatement.setString(3, book.getAuthor());
-            preparedStatement.setInt(4, book.getCategoryId());
-            preparedStatement.setInt(5, book.getQuantity());
-            preparedStatement.setString(6, book.getDescription());
-            preparedStatement.setString(7, book.getImage());
-            preparedStatement.setBoolean(8, book.getAvailable());
+            statement.executeUpdate();
 
-            result = preparedStatement.executeUpdate();
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    
-        }
-    
-    
-    
-    
-    
-    
-    public Boolean DeleteBook(int id){
-        boolean rowDeleted = false;
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BOOK_SQL)) {
-
-            preparedStatement.setInt(1, id);
-            rowDeleted = preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return rowDeleted;
-    }
-    
-    
-    
-    
-    
-  public int UpdateBook(int id, Books book) {
-        int result = 0;
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BOOK_SQL)) {
-
-            preparedStatement.setString(1, book.getTitle());
-            preparedStatement.setString(2, book.getBookId());
-            preparedStatement.setString(3, book.getAuthor());
-            preparedStatement.setInt(4, book.getCategoryId());
-            preparedStatement.setInt(5, book.getQuantity());
-            preparedStatement.setString(6, book.getDescription());
-            preparedStatement.setString(7, book.getImage());
-            preparedStatement.setInt(8, id);
-
-            result = preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-  
-  
-  
-  
-
-    public Books showBookById(int bid) {
-         Books book = null;
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BOOK_BY_ID_SQL)) {
-
-            preparedStatement.setInt(1, bid);
-
-            ResultSet rs = preparedStatement.executeQuery();
-
-            if (rs.next()) {
-                String title = rs.getString("title");
-                String bookId = rs.getString("bookId");
-                String author = rs.getString("author");
-                int categoryId = rs.getInt("categoryId");
-                int quantity = rs.getInt("quantity");
-                String description = rs.getString("description");
-                String image = rs.getString("image");
-                Boolean available = rs.getBoolean("available");
-
-                book = new Books(bid,title, bookId, author, categoryId, quantity, description, image,available);
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return book;
-        
+        return -1;
     }
-    
-    
-    
 
-    public List<Books> showBook() {
-        List<Books> booksList = new ArrayList<>();
-
+    // Update an existing book
+    public boolean updateBook(Books book) {
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_BOOKS_SQL);
-             ResultSet rs = preparedStatement.executeQuery()) {
+                PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
+            statement.setString(1, book.getTitle());
+            statement.setString(2, book.getBookId());
+            statement.setString(3, book.getAuthor());
+            statement.setInt(4, book.getCategoryId());
+            statement.setInt(5, book.getQuantity());
+            statement.setString(6, book.getDescription());
+            statement.setString(7, book.getImage());
+            statement.setBoolean(8, book.getAvailable());
+            statement.setInt(9, book.getId());
 
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String title = rs.getString("title");
-                String bookId = rs.getString("bookId");
-                String author = rs.getString("author");
-                int categoryId = rs.getInt("categoryId");
-                int quantity = rs.getInt("quantity");
-                String description = rs.getString("description");
-                String image = rs.getString("image");
-                Boolean available = rs.getBoolean("available");
-                Books book = new Books(id,title, bookId, author, categoryId, quantity, description, image,available);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Get all books
+    public List<Books> showBooks() {
+        List<Books> booksList = new ArrayList<>();
+        try (Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Books book = mapResultSetToBook(resultSet);
                 booksList.add(book);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return booksList;
     }
-    
-    
-    
-    
 
-    public Books showBookByIdOrName(String bookD) {
-       Books book = null;
-
+    // Get a book by ID
+    public Books showBookById(int bookId) {
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BOOK_BY_ID_OR_NAME_SQL)) {
-
-           
-            preparedStatement.setString(1, bookD);
-            preparedStatement.setString(2, bookD);
-
-            ResultSet rs = preparedStatement.executeQuery();
-
-            if (rs.next()) {
-                int id = rs.getInt("id");
-                String title = rs.getString("title");
-                String bookId = rs.getString("bookId");
-                String author = rs.getString("author");
-                int categoryId = rs.getInt("bookCategoryId");
-                int quantity = rs.getInt("quantity");
-                String description = rs.getString("description");
-                String image = rs.getString("image");
-                Boolean available = rs.getBoolean("available");
-
-                book = new Books(id,title, bookId, author, categoryId, quantity, description, image,available);
+                PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
+            statement.setInt(1, bookId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return mapResultSetToBook(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return book;
+        return null;
     }
-    
 
+    // Delete a book
+    public boolean deleteBook(int bookId) {
+        try (Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
+            statement.setInt(1, bookId);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    // Helper method to map ResultSet to Book object
+    private Books mapResultSetToBook(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String title = resultSet.getString("title");
+        String bookId = resultSet.getString("bookId");
+        String author = resultSet.getString("author");
+        int categoryId = resultSet.getInt("categoryId");
+        int quantity = resultSet.getInt("quantity");
+        String description = resultSet.getString("description");
+        String image = resultSet.getString("image");
+        Boolean available = resultSet.getBoolean("available");
+        return new Books(id, title, bookId, author, categoryId, quantity, description, image, available);
+    }
+
+    public Books showBookByBid(String id) {
+      try (Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(SELECT_BY_BOOK_ID_QUERY)) {
+            statement.setString(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return mapResultSetToBook(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

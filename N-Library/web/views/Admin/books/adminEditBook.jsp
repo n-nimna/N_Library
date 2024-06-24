@@ -36,7 +36,7 @@
         <div class="content shift-left">
         <div class="container-fluid mt-3 ">
             <div class="card">
-                <center> <img src="book image/${book.image}"   width="50px" height="50px"></center>>
+                <center> <img src="DBImages/${book.image}"   width="50px" height="50px"></center>>
                 <div class="card-body">
                     <form action="${pageContext.request.contextPath}/admin/books/update" method="post" enctype="multipart/form-data" >
                        <input type="hidden" name="Id" value="${book.id}">

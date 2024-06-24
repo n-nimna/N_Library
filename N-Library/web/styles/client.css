@@ -1,0 +1,80 @@
+/*common css*/
+
+/*common css*/
+
+/*login page style*/
+
+
+/*end of login page style*/
+
+
+/* Custom CSS for additional styling */
+.navbar-light .navbar-brand, .navbar-light .nav-link {
+    color: #ffffff; /* Ensures text is white */
+}
+
+.navbar-light .nav-link:hover {
+    color: #f8f9fa; /* Lighten text color on hover */
+}
+
+.primary-color {
+    background-color: #007bff;
+    color: white;
+}
+
+.custom-card {
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+}
+
+.custom-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+    height:18rem;
+    object-fit:fill;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+
+
+/* Ensure cards are responsive */
+@media (max-width: 768px) {
+    /*login page*/   
+    .login-container {
+        flex-direction: row;
+
+    }
+    .login-image, .login-form {
+        width: 50%;
+    }
+    .login-image {
+        padding-right: 20px;
+    }
+    .login-form {
+        padding-left: 20px;
+    }
+    /*end of login page*/
+
+    .custom-card {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .card {
+        margin-bottom: 20px;
+    }
+    .profile-card {
+        text-align: center;
+    }
+
+    .custom-select {
+        width: 200px;
+    }
+}

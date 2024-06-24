@@ -1,6 +1,5 @@
 package com.team2.service;
 
-
 import com.team2.controller.utill.DBConnection;
 import com.team2.models.User;
 import java.sql.*;
@@ -10,12 +9,13 @@ import javax.servlet.http.HttpSession;
 
 public class UserService {
 
-    private static final String INSERT_QUERY = "INSERT INTO users (firstName, lastName, userNic, image, email, phoneNumber, address, password, active, userType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE users SET firstName = ?, lastName = ?, userNic = ?, image = ?, email = ?, phoneNumber = ?, address = ?, password = ?, active = ?, userType = ? WHERE userId = ?";
-    private static final String DELETE_QUERY = "DELETE FROM users WHERE userId = ?";
-    private static final String SELECT_BY_ID_QUERY = "SELECT * FROM users WHERE userId = ?";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM users WHERE userType = ?"; // Added WHERE clause to filter by userType
-    private static final String SELECT_BY_EMAIL_QUERY = "SELECT * FROM users WHERE email = ?";
+    private static final String INSERT_QUERY = "INSERT INTO user (firstName, lastName, userNic, image, email, phoneNumber, address, password, active, userType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE user SET firstName = ?, lastName = ?, userNic = ?, image = ?, email = ?, phoneNumber = ?, address = ? WHERE userId = ?";
+    private static final String DELETE_QUERY = "DELETE FROM user WHERE userId = ?";
+    private static final String SELECT_BY_ID_QUERY = "SELECT * FROM user WHERE userId = ?";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM user WHERE userType = ?"; // Added WHERE clause to filter by userType
+    private static final String SELECT_BY_EMAIL_QUERY = "SELECT * FROM user WHERE email = ?";
+    private static final String SELECT_BY_NIC_QUERY = "SELECT * FROM user WHERE userNic = ?";
 
     // Add a new user
     public int addUser(User user) {
@@ -24,7 +24,7 @@ public class UserService {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getUserNic());
-            statement.setString(4, user.getImage()); 
+            statement.setString(4, user.getImage());
             statement.setString(5, user.getEmail());
             statement.setString(6, user.getPhoneNumber());
             statement.setString(7, user.getAddress());
@@ -36,12 +36,12 @@ public class UserService {
 
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                return generatedKeys.getInt(1); 
+                return generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1; 
+        return -1;
     }
 
     // Update an existing user
@@ -51,20 +51,56 @@ public class UserService {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getUserNic());
-            statement.setString(4, user.getImage()); 
+            statement.setString(4, user.getImage());
             statement.setString(5, user.getEmail());
             statement.setString(6, user.getPhoneNumber());
             statement.setString(7, user.getAddress());
-            statement.setString(8, user.getPassword());
-            statement.setBoolean(9, user.isActive());
-            statement.setString(10, user.getUserType());
-            statement.setInt(11, user.getUserId());
+            statement.setInt(8, user.getUserId());
 
-            return statement.executeUpdate() > 0; 
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; 
+        return false;
+    }
+
+    public boolean isActive(int userId) {
+        String query = "SELECT active FROM user WHERE userId = ?";
+        try (Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getBoolean("active");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean enableUser(int userId) {
+        String enableQuery = "UPDATE user SET active = TRUE WHERE userId = ?";
+        try (Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(enableQuery)) {
+            statement.setInt(1, userId);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean disableUser(int userId) {
+        String disableQuery = "UPDATE user SET active = FALSE WHERE userId = ?";
+        try (Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(disableQuery)) {
+            statement.setInt(1, userId);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // Get all users (with a filter for student type)
@@ -96,7 +132,7 @@ public class UserService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null; 
+        return null;
     }
 
     // Delete a user
@@ -104,7 +140,7 @@ public class UserService {
         try (Connection connection = DBConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setInt(1, userId);
-            return statement.executeUpdate() > 0; 
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,13 +158,13 @@ public class UserService {
                 if (storedPassword.equals(password)) {
                     User user = mapResultSetToUser(resultSet);
                     session.setAttribute("loggedInUser", user);
-                    return true; 
+                    return true;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; 
+        return false;
     }
 
     // User logout
@@ -150,5 +186,19 @@ public class UserService {
         boolean active = resultSet.getBoolean("active");
         String userType = resultSet.getString("userType");
         return new User(userId, firstName, lastName, userNic, image, email, phoneNumber, address, password, active, userType);
+    }
+
+    public User showUserByNic(String id) {
+          try (Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(SELECT_BY_NIC_QUERY)) {
+            statement.setString(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return mapResultSetToUser(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
