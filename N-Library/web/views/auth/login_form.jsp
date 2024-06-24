@@ -1,4 +1,4 @@
-<%@page import="com.team2.controller.utill.assetsUrl"%>
+<%@page import="com.team2.utill.assetsUrl"%>
 <!DOCTYPE html>
 <html lang="en">
 

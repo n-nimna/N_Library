@@ -1,4 +1,4 @@
-package com.team2.controller.utill;
+package com.team2.utill;
 
 
 import java.sql.Connection;

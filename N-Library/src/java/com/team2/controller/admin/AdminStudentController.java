@@ -1,6 +1,6 @@
 package com.team2.controller.admin;
 
-import com.team2.controller.utill.PasswordGenarator;
+import com.team2.utill.PasswordGenarator;
 import com.team2.models.User;
 import com.team2.service.UserService;
 import java.io.FileOutputStream;

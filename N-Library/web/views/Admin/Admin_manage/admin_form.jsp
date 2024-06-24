@@ -1,6 +1,4 @@
-<%@page import="com.team2.controller.utill.assetsUrl"%>
-<%@page import="com.team2.models.User"%>
-<%@page import="java.util.List"%>
+
 
 <!DOCTYPE html>
 <html lang="en">

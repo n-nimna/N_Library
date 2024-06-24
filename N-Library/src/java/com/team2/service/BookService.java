@@ -5,7 +5,7 @@
  */
 package com.team2.service;
 
-import com.team2.controller.utill.DBConnection;
+import com.team2.utill.DBConnection;
 import com.team2.models.Books;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

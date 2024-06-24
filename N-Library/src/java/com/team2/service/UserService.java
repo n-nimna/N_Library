@@ -1,6 +1,6 @@
 package com.team2.service;
 
-import com.team2.controller.utill.DBConnection;
+import com.team2.utill.DBConnection;
 import com.team2.models.User;
 import java.sql.*;
 import java.util.ArrayList;
