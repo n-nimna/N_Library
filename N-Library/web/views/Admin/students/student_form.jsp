@@ -174,10 +174,7 @@
                         "<p class='error'>Failed to update student. Please try again.</p>";
             }
 
-            // Function to set the message color
-            function setMessageColor(messageElement, color) {
-                messageElement.style.color = color;
-            }
+          
         </script>
     </body>
 

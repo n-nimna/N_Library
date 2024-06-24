@@ -1,4 +1,4 @@
-package com.team2.utill;
+package com.team2.controller.utill;
 
 public class PasswordGenarator {
 

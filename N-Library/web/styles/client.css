@@ -1,3 +1,13 @@
+/*common css*/
+
+/*common css*/
+
+/*login page style*/
+
+
+/*end of login page style*/
+
+
 /* Custom CSS for additional styling */
 .navbar-light .navbar-brand, .navbar-light .nav-link {
     color: #ffffff; /* Ensures text is white */
@@ -35,6 +45,22 @@
 
 /* Ensure cards are responsive */
 @media (max-width: 768px) {
+    /*login page*/   
+    .login-container {
+        flex-direction: row;
+
+    }
+    .login-image, .login-form {
+        width: 50%;
+    }
+    .login-image {
+        padding-right: 20px;
+    }
+    .login-form {
+        padding-left: 20px;
+    }
+    /*end of login page*/
+
     .custom-card {
         margin-bottom: 20px;
     }
