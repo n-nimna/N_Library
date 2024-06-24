@@ -1,88 +1,136 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.team2.controller.admin;
 
+import com.team2.models.BookCategories;
+import com.team2.service.BookCategoryService;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author kavin
- */
-@WebServlet(name = "AdminManageBooksCategories", urlPatterns = {"/AdminManageBooksCategories"})
+@WebServlet(name = "AdminBookCategoryController", urlPatterns = {
+    "/admin/bookcategories/new",
+    "/admin/bookcategories/add-new",
+    "/admin/bookcategories/delete",
+    "/admin/bookcategories/update",
+    "/admin/bookcategories/",
+    "/admin/bookcategories/find"
+})
 public class AdminManageBooksCategoriesController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private BookCategoryService bookCategoryService;
+
+    public AdminManageBooksCategoriesController() {
+        this.bookCategoryService = new BookCategoryService();
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AdminManageBooksCategories</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AdminManageBooksCategories at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        doGet(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getServletPath();
+
+        try {
+            switch (action) {
+
+                case "/admin/bookcategories/add-new":
+                    insertBookCategory(request, response);
+                    break;
+                case "/admin/bookcategories/delete":
+                    deleteBookCategory(request, response);
+                    break;
+
+                case "/admin/bookcategories/update":
+                    updateBookCategory(request, response);
+                    break;
+                case "/admin/bookcategories/":
+                    showBookCategories(request, response);
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
+        }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    private void showBookCategories(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        List<BookCategories> bookCategories = bookCategoryService.showBookCategories();
+        request.setAttribute("bookCategories", bookCategories);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/Admin/Books_Categories/show_bookcategories.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private void insertBookCategory(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        String categoryName = request.getParameter("categoryName");
+
+        BookCategories bookCategory = new BookCategories(categoryName);
+        int insertedId = bookCategoryService.addBookCategory(bookCategory);
+
+        if (insertedId > 0) {
+            request.setAttribute("status", "InsertSuccess");
+        } else {
+            request.setAttribute("status", "InsertFailed");
+        }
+        List<BookCategories> bookCategories = bookCategoryService.showBookCategories();
+        request.setAttribute("bookCategories", bookCategories);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/bookcategories/");
+        dispatcher.forward(request, response);
+    }
+
+    private void deleteBookCategory(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        String id = request.getParameter("bcId");
+        int bcId = Integer.parseInt(id);
+
+        boolean deleted = bookCategoryService.deleteBookCategory(bcId);
+
+        if (deleted) {
+            request.setAttribute("status", "DeleteSuccess");
+        } else {
+            request.setAttribute("status", "DeleteFailed");
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/bookcategories/");
+        dispatcher.forward(request, response);
+    }
+
+    private void updateBookCategory(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        String id = request.getParameter("bcId");
+        int bcId = Integer.parseInt(id);
+
+        String categoryName = request.getParameter("categoryName");
+
+        BookCategories bookCategory = new BookCategories(bcId, categoryName);
+        boolean updated = bookCategoryService.updateBookCategory(bookCategory);
+
+        if (updated) {
+            request.setAttribute("status", "UpdateSuccess");
+        } else {
+            request.setAttribute("status", "UpdateFailed");
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/bookcategories/");
+        dispatcher.forward(request, response);
+    }
 
 }

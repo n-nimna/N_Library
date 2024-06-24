@@ -5,81 +5,76 @@
  */
 package com.team2.controller.auth;
 
+import com.team2.models.User;
+import com.team2.service.UserService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author kavin
  */
-@WebServlet(name = "AuthController", urlPatterns = {"/AuthController"})
+@WebServlet(name = "AuthController", urlPatterns = {"/login"})
 public class AuthController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AuthController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AuthController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+    private UserService userService;
+
+    public AuthController() {
+        this.userService = new UserService();
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/auth/login_form.jsp");
+        dispatcher.forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        HttpSession session = request.getSession();
+
+        if (userService.loginUser(email, password, session)) {
+            User user = (User) session.getAttribute("loggedInUser");
+            String userType = user.getUserType();
+            session.setAttribute("userId", user.getUserId());
+            session.setAttribute("username", user.getFirstName() + " " + user.getLastName());
+            session.setAttribute("userImage", user.getImage());
+
+            if ("student".equalsIgnoreCase(userType)) {
+                request.setAttribute("status", "loginSuccess");
+                response.sendRedirect("/N-Library/student/home");
+
+            } else if ("admin".equalsIgnoreCase(userType)) {
+                request.setAttribute("status", "loginSuccess");
+                response.sendRedirect("/N-Library/admin/home");
+
+            } else {
+                request.setAttribute("status", "loginError");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/views/auth/login_form.jsp");
+                dispatcher.forward(request, response);
+
+            }
+        } else {
+            request.setAttribute("status", "loginError");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/views/auth/login_form.jsp");
+            dispatcher.forward(request, response);
+
+        }
+
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
