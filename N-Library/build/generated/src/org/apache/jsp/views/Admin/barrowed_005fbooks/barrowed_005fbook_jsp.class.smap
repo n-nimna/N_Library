@@ -1,0 +1,22 @@
+SMAP
+barrowed_005fbook_jsp.java
+JSP
+*S JSP
+*F
++ 0 barrowed_book.jsp
+views/Admin/barrowed_books/barrowed_book.jsp
++ 1 sidebar.jspf
+views/Admin/admincommon/sidebar.jspf
+*L
+1,11:50
+12:61,3
+13,12:64
+1#1,5:76
+6:81,3
+7,11:84
+18:95,3
+19,11:98
+30:109,3
+31,8:112
+24#0,108:120
+*E
