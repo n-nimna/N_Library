@@ -12,6 +12,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -81,12 +83,12 @@ public class AuthController extends HttpServlet {
         
         
         try{
-           Class.forName("com.mysql.jdbc.Driver");
+           Class.forName("com.mysql.cj.jdbc.Driver");
            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/librarySystem","root","");
             
            //get data from login table using query
            Statement stm = con.createStatement();
-           String query = "select 'from users Where email='"+email+"'  AND password='"+password+"'";
+           String query = "SELECT * FROM user WHERE email='"+email+"' AND password='"+password+"'" ;
            ResultSet rs = stm.executeQuery(query);
            
            
@@ -100,29 +102,28 @@ public class AuthController extends HttpServlet {
                     session.setAttribute("admin_id",userId);
                     response.sendRedirect("adminDashboard.jsp");
                 } 
-           else if (userType.equals("users"))
+           else if (userType.equals("user"))
                    
                 {
                      session.setAttribute("user_id",userId);
-                     response.sendRedirect("");
+                     response.sendRedirect("/index.html");
                 }
                 else{
                       request.setAttribute("message","User Not Founded");
-                      RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                      RequestDispatcher dispatcher = request.getRequestDispatcher("/auth/login.jsp");
                       dispatcher.forward(request, response);
                    }
-            }else{
-                      request.setAttribute("message","Incorrect email or password");
-                      RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-                      dispatcher.forward(request, response);
-               }
-           }
+            }else{   request.setAttribute("message","Incorrect email or password");
+                     RequestDispatcher dispatcher = request.getRequestDispatcher("/auth/login.jsp");
+                     dispatcher.forward(request, response);
+              }
+      }
         
        catch(ClassNotFoundException | SQLException error  ){
             
         String m = error.getMessage();
-        request.setAttribute("massage", m);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        request.setAttribute("message", m);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/auth/login.jsp");
         dispatcher.forward(request, response);
             
         }
@@ -138,4 +139,4 @@ public class AuthController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-}
+}      

@@ -10,7 +10,7 @@ and open the template in the editor.
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #850F8D;
+    background: #CAF4FF;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -34,12 +34,12 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #E49BFF;
+    background-color: #3572EF;
     width: 400px;
     height: 450px;
     text-align: left;
     border-radius: 10px;
-    box-shadow: 5px 4px 8px rgba(19, 9, 9, 0.1);
+    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.1);
     animation: fadeIn 0.5s ease-in-out;
     border: 1px solid #050606;
 }
@@ -49,12 +49,16 @@ body {
     to { opacity: 1; }
 }
 
-
+.h6Tag{
+    font-size: 15px;
+    text-align: center;
+    
+}
 
 .login-form h2 {
     margin-bottom: 20px;
     font-size: 32px;
-    color: #030303;
+    color: #fff;
     text-align: center;
     font-weight: 500;
     letter-spacing: 1px;
@@ -82,7 +86,7 @@ body {
 }
 
 .login-form button{
-    background-color: #850F8D;
+    background: #06D001;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -164,7 +168,7 @@ input[type="email"], input[type="password"] {
 
 .forget-password a {
     text-decoration: none;
-    color: #6c63ff;
+    color: #030303;
     
 }
 
@@ -175,8 +179,6 @@ input[type="email"], input[type="password"] {
 .forget-password{
    text-align: left;
 }
-
-
 
 
 
