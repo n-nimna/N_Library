@@ -4,6 +4,18 @@
     Author     : ASUS
 --%>
 
+
+
+<%@page import="java.util.Objects"%>
+<%   
+    String a = "";
+    if(!Objects.isNull(request.getAttribute("message")))
+    {
+       a = request.getAttribute("message").toString();
+    }
+
+%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <!DOCTYPE html>
@@ -25,18 +37,20 @@
        <div class="image">
         <div class="container">
         <div class="login-form">
+            <h6 class="h6Tag"><%=a%></h6>
             <h2><u><b>User Login</b></u></h2>
             <form  action="/N-Library/AuthController" method="POST" id="loginForm">
                 <div class="input-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
-                </div>
+                </div>     
                 <div class="input-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                     <input type="password" id="password" name="password" required>
+                    
                 </div>
                 <div class="forget-password">
-                    <a href="#">Forget Password</a>
+                <a href="#">Forget Password</a>
                 </div>
                 <button type="submit">Login</button>
             </form>
@@ -45,7 +59,7 @@
 </div>
 
 
-    <script src="../scripts/login.js"></script>
+   
 
 </body>
 </html>
